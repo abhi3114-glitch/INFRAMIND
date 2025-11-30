@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:7.0
+    container_name: infra-mind-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: inframind
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - infra-mind-network
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: infra-mind-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - infra-mind-network
+
+volumes:
+  mongodb_data:
+  redis_data:
+
+networks:
+  infra-mind-network:
+    driver: bridge
